@@ -1,155 +1,56 @@
-# Cross-Chain ERC20 Token Example
-
-This project demonstrates how to create and deploy a cross-chain ERC20 token using VIA's messaging protocol. The token can be bridged between different blockchain networks, allowing for seamless token transfers across chains.
-
+# Native Cross-Chain Token
 ## Prerequisites
 
 Before you begin, make sure you have:
 
-- Node.js (v16+) and npm
+- Node.js (v20+) and npm
 - Git
 - A private key with testnet funds for deployment
 - Testnet tokens for:
   - Avalanche Testnet
   - Base Testnet
 
-## Project Structure
+## Step 1: Clone & Setup
 
-```
-quickstart-token/
-├── contracts/
-│   └── MyERC20.sol         # The ERC20 token contract with cross-chain functionality
-├── scripts/
-│   ├── deploy.js           # Deploy script using ethers v6
-│   └── bridge.js           # Bridge tokens between chains
-├── frontend/               # React frontend for interacting with the token
-├── network.config.js       # Network configuration
-├── package.json            # Project dependencies
-├── .env.example            # Example environment variables
-└── README.md               # Project documentation
-```
-
-## Setup
-
-1. Clone the repository:
 ```bash
-git clone https://github.com/VIALabs-io/quickstart-token.git
-cd quickstart-token
-```
+# Clone the repository
+git clone https://github.com/VIALabs-io/quickstart-token.git && cd quickstart-token
 
-2. Install dependencies:
-```bash
+# Install dependencies
 npm install
-```
 
-3. Create a `.env` file with your private key:
-```bash
+# Create a .env file with your private key
 cp .env.example .env
 ```
 
-Edit the `.env` file and add your private key. Make sure your private key has testnet tokens for both networks.
-
-## Deployment and Configuration
-
-This project includes a single script that handles compilation, deployment, and cross-chain configuration:
+## Step 2: Deploy Your Token
 
 ```bash
 node scripts/deploy.js
 ```
 
-This script will:
-1. Compile the MyERC20.sol contract
-2. Deploy the contract to all configured networks (Avalanche Testnet and Base Testnet)
-3. Configure cross-chain messaging between all deployed contracts
-4. Save deployment information for the frontend
-
-## Bridging Tokens
-
-You can bridge tokens between networks using the provided script:
+## Step 3: Bridge Tokens Between Networks
 
 ```bash
 node scripts/bridge.js avalanche-testnet base-testnet 5
 ```
 
-This command bridges 5 tokens from Avalanche Testnet to Base Testnet.
-
-You can also specify a recipient address:
+## Step 4: Use the Frontend
 
 ```bash
-node scripts/bridge.js avalanche-testnet base-testnet 5 0x1234...
-```
-
-## Frontend
-
-The project includes a React-based frontend for interacting with the token contracts. The frontend provides a user-friendly interface for:
-- Connecting your wallet
-- Viewing your token balance on different networks
-- Bridging tokens between networks
-- Monitoring cross-chain events in real-time
-
-### Running the Frontend
-
-To start the frontend development server with hot reloading:
-
-```bash
+# Start the frontend
 cd frontend
 npm install
 npm start
 ```
 
-This will start the development server on http://localhost:3000. The page will automatically reload if you make changes to the code.
+🎉 Congratulations! You've successfully created and used a cross-chain token.
 
-### Building for Production
+# Adding More Networks
 
-To create a production build:
+## Step 1: Edit Network Configuration
 
-```bash
-cd frontend
-npm install
-npm run build
-```
-
-This will create an optimized build in the `frontend/build` folder that you can deploy to any static hosting service.
-
-**Important**: You must run the deployment script first before using the frontend. If the contracts haven't been deployed, the frontend will display an error message with instructions.
-
-## How It Works
-
-### Contract
-
-The `MyERC20` contract is a standard ERC20 token with added cross-chain functionality:
-
-- It inherits from OpenZeppelin's `ERC20Burnable`
-- It implements VIA's `MessageClient` for cross-chain messaging
-- When tokens are bridged, they are burned on the source chain and minted on the destination chain
-
-### Cross-Chain Messaging
-
-The cross-chain functionality works as follows:
-
-1. When a user bridges tokens, the tokens are burned on the source chain
-2. A cross-chain message is sent to the destination chain
-3. The message is processed on the destination chain, and tokens are minted to the recipient
-
-### Deployment Process
-
-The deployment script:
-1. Compiles the contract using solc 0.8.17
-2. Deploys the contract to all configured networks
-3. Configures cross-chain messaging between all deployed contracts
-4. Saves deployment information for both the backend scripts and the frontend
-
-## Customizing the Token
-
-You can customize the token by modifying the `MyERC20.sol` contract:
-
-- Change the token name and symbol in the constructor
-- Adjust the initial supply
-- Add additional functionality as needed
-
-## Adding More Networks
-
-To add more networks, edit the `network.config.js` file and add new network configurations:
+Edit the network.config.js file and add new network configurations:
 
 ```javascript
 // Add a new network
@@ -177,27 +78,23 @@ const networks = {
     }
   },
   // Add your new network here
-  // 'polygon-testnet': {
-  //   name: 'polygon-testnet',
-  //   chainId: 80001,
-  //   rpcUrl: process.env.POLYGON_TESTNET_RPC || 'https://rpc-mumbai.maticvigil.com',
-  //   blockExplorer: 'https://mumbai.polygonscan.com',
-  //   nativeCurrency: {
-  //     name: 'MATIC',
-  //     symbol: 'MATIC',
-  //     decimals: 18
-  //   }
-  // }
+  // Example for adding Polygon Mumbai:
+  'polygon-testnet': {
+    name: 'polygon-testnet',
+    chainId: 80001,
+    rpcUrl: process.env.POLYGON_TESTNET_RPC || 'https://rpc-mumbai.maticvigil.com',
+    blockExplorer: 'https://mumbai.polygonscan.com',
+    nativeCurrency: {
+      name: 'MATIC',
+      symbol: 'MATIC',
+      decimals: 18
+    }
+  }
 };
 ```
 
-After adding a new network, run the deployment script again:
+## Step 2: Deploy
 
 ```bash
 node scripts/deploy.js
 ```
-
-The script is designed to:
-1. Skip deployment for networks that already have deployments (preserving existing token contracts)
-2. Deploy only to new networks that don't have existing deployments
-3. Reconfigure all contracts to work with each other, including the new ones
