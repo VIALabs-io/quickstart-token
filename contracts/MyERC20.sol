@@ -10,7 +10,7 @@ contract MyERC20 is ERC20Burnable, MessageClient {
     event TokensBridged(address indexed sender, uint indexed destChainId, address indexed recipient, uint amount);
     event TokensReceived(uint indexed sourceChainId, address indexed recipient, uint amount);
 
-    constructor() ERC20("FOOOTOKEN", "FOOOOBAR") {
+    constructor() ERC20("Cross Chain Native Token", "CCNT") {
         MESSAGE_OWNER = msg.sender;
         _mint(msg.sender, 1_000_000 ether);
     }
